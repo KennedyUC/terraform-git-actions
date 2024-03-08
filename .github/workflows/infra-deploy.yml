@@ -1,0 +1,86 @@
+name: Workflow Dispatch Demo
+
+on:
+  push:
+    branches:
+    - main
+
+    workflow_dispatch:
+      inputs:
+        deploy_infra:
+          description: 'Deploy Infrastructure'
+          required: true
+          type: boolean
+          default: true
+        destroy_infra:
+          description: 'Destroy Infrastructure'
+          required: true
+          type: boolean
+          default: false
+          
+    paths:
+    - .github/workflows/infra-deploy.yml
+    - terraform-scripts/**
+
+jobs:
+  terraform:
+    name: 'Terraform'
+    runs-on: ubuntu-latest
+    env:
+      WORK_DIR: './terraform-scripts'
+      TERRAFORM_VERSION: 1.7.3
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+            
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v3
+      with:
+        terraform_version: ${{ env.TERRAFORM_VERSION }}
+
+    - name: Terraform Init
+      run: |
+        export ARM_CLIENT_ID=${{ secrets.AZURE_CLIENT_ID }}
+        export ARM_CLIENT_SECRET=${{ secrets.AZURE_CLIENT_SECRET }}
+        export ARM_TENANT_ID=${{ secrets.AZURE_TENANT_ID }}
+        export ARM_SUBSCRIPTION_ID=${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+        terraform init
+      working-directory: ${{ env.WORK_DIR }} 
+
+    - name: Terraform Format
+      run: terraform fmt
+      working-directory: ${{ env.WORK_DIR }} 
+
+    - name: Terraform Plan
+      run: |
+        export ARM_CLIENT_ID=${{ secrets.AZURE_CLIENT_ID }}
+        export ARM_CLIENT_SECRET=${{ secrets.AZURE_CLIENT_SECRET }}
+        export ARM_TENANT_ID=${{ secrets.AZURE_TENANT_ID }}
+        export ARM_SUBSCRIPTION_ID=${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+        terraform plan -no-color -out=plan.tfdata
+      working-directory: ${{ env.WORK_DIR }} 
+
+    - name: Terraform Apply
+      if: ${{ github.event.inputs.deploy_infra }}
+      run: |
+        export ARM_CLIENT_ID=${{ secrets.AZURE_CLIENT_ID }}
+        export ARM_CLIENT_SECRET=${{ secrets.AZURE_CLIENT_SECRET }}
+        export ARM_TENANT_ID=${{ secrets.AZURE_TENANT_ID }}
+        export ARM_SUBSCRIPTION_ID=${{ secrets.AZURE_SUBSCRIPTION_ID }}
+        
+        terraform apply -auto-approve plan.tfdata
+      working-directory: ${{ env.WORK_DIR }} 
+
+    - name: Terraform Destroy
+      if: ${{ github.event.inputs.destroy_infra }}
+      run: |
+        export ARM_CLIENT_ID=${{ secrets.AZURE_CLIENT_ID }}
+        export ARM_CLIENT_SECRET=${{ secrets.AZURE_CLIENT_SECRET }}
+        export ARM_TENANT_ID=${{ secrets.AZURE_TENANT_ID }}
+        export ARM_SUBSCRIPTION_ID=${{ secrets.AZURE_SUBSCRIPTION_ID }}
+        
+        terraform destroy -auto-approve
+      working-directory: ${{ env.WORK_DIR }}

@@ -19,8 +19,8 @@ on:
         default: false
           
     paths:
-    - .github/workflows/infra-deploy.yml
-    - terraform-scripts/**
+    - .github/workflows/boolean-dispatch.yml
+    - terraform-boolean-dispatch/**
 
 jobs:
   terraform:
@@ -64,7 +64,7 @@ jobs:
       working-directory: ${{ env.WORK_DIR }} 
 
     - name: Terraform Apply
-      if: ${{ github.event.inputs.deploy_infra }}
+      if: ${{ github.event.inputs.deploy_infra == true }}
       run: |
         export ARM_CLIENT_ID=${{ secrets.AZURE_CLIENT_ID }}
         export ARM_CLIENT_SECRET=${{ secrets.AZURE_CLIENT_SECRET }}
@@ -75,7 +75,7 @@ jobs:
       working-directory: ${{ env.WORK_DIR }} 
 
     - name: Terraform Destroy
-      if: ${{ github.event.inputs.destroy_infra }}
+      if: ${{ github.event.inputs.destroy_infra == true }}
       run: |
         export ARM_CLIENT_ID=${{ secrets.AZURE_CLIENT_ID }}
         export ARM_CLIENT_SECRET=${{ secrets.AZURE_CLIENT_SECRET }}

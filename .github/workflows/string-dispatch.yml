@@ -1,4 +1,4 @@
-name: Boolean Workflow Dispatch Demo
+name: String Workflow Dispatch Demo
 
 on:
   push:
@@ -7,27 +7,22 @@ on:
 
   workflow_dispatch:
     inputs:
-      deploy_infra:
-        description: 'Deploy Infrastructure'
+      action_type:
+        description: 'Deploy or Destroy Infrastructure'
         required: true
-        type: boolean
-        default: true
-      destroy_infra:
-        description: 'Destroy Infrastructure'
-        required: true
-        type: boolean
-        default: false
+        type: string
+        default: 'deploy'
           
     paths:
-    - .github/workflows/boolean-dispatch.yml
-    - terraform-boolean-dispatch/**
+    - .github/workflows/string-dispatch.yml
+    - terraform-string-dispatch/**
 
 jobs:
   terraform:
     name: 'Terraform'
     runs-on: ubuntu-latest
     env:
-      WORK_DIR: './terraform-boolean-dispatch'
+      WORK_DIR: './terraform-string-dispatch'
       TERRAFORM_VERSION: 1.7.3
 
     steps:
@@ -64,7 +59,7 @@ jobs:
       working-directory: ${{ env.WORK_DIR }} 
 
     - name: Terraform Apply
-      if: ${{ github.event.inputs.deploy_infra == 'true' }}
+      if: ${{ github.event.inputs.action_type == 'deploy' }}
       run: |
         export ARM_CLIENT_ID=${{ secrets.AZURE_CLIENT_ID }}
         export ARM_CLIENT_SECRET=${{ secrets.AZURE_CLIENT_SECRET }}
@@ -75,7 +70,7 @@ jobs:
       working-directory: ${{ env.WORK_DIR }} 
 
     - name: Terraform Destroy
-      if: ${{ github.event.inputs.destroy_infra == 'true' }}
+      if: ${{ github.event.inputs.action_type == 'destroy' }}
       run: |
         export ARM_CLIENT_ID=${{ secrets.AZURE_CLIENT_ID }}
         export ARM_CLIENT_SECRET=${{ secrets.AZURE_CLIENT_SECRET }}

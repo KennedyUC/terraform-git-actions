@@ -12,11 +12,11 @@ on:
         required: true
         type: boolean
         default: true
-      # destroy_infra:
-      #   description: 'Destroy Infrastructure'
-      #   required: true
-      #   type: boolean
-      #   default: false
+      destroy_infra:
+        description: 'Destroy Infrastructure'
+        required: true
+        type: boolean
+        default: false
           
     paths:
     - .github/workflows/infra-deploy.yml
@@ -64,7 +64,7 @@ jobs:
       working-directory: ${{ env.WORK_DIR }} 
 
     - name: Terraform Apply
-      if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.deploy_infra }}
+      if: ${{ github.event.inputs.deploy_infra }}
       run: |
         export ARM_CLIENT_ID=${{ secrets.AZURE_CLIENT_ID }}
         export ARM_CLIENT_SECRET=${{ secrets.AZURE_CLIENT_SECRET }}
@@ -74,13 +74,13 @@ jobs:
         terraform apply -auto-approve plan.tfdata
       working-directory: ${{ env.WORK_DIR }} 
 
-    # - name: Terraform Destroy
-    #   if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.destroy_infra }}
-    #   run: |
-    #     export ARM_CLIENT_ID=${{ secrets.AZURE_CLIENT_ID }}
-    #     export ARM_CLIENT_SECRET=${{ secrets.AZURE_CLIENT_SECRET }}
-    #     export ARM_TENANT_ID=${{ secrets.AZURE_TENANT_ID }}
-    #     export ARM_SUBSCRIPTION_ID=${{ secrets.AZURE_SUBSCRIPTION_ID }}
+    - name: Terraform Destroy
+      if: ${{ github.event.inputs.destroy_infra }}
+      run: |
+        export ARM_CLIENT_ID=${{ secrets.AZURE_CLIENT_ID }}
+        export ARM_CLIENT_SECRET=${{ secrets.AZURE_CLIENT_SECRET }}
+        export ARM_TENANT_ID=${{ secrets.AZURE_TENANT_ID }}
+        export ARM_SUBSCRIPTION_ID=${{ secrets.AZURE_SUBSCRIPTION_ID }}
         
-    #     terraform destroy -auto-approve
-    #   working-directory: ${{ env.WORK_DIR }}
+        terraform destroy -auto-approve
+      working-directory: ${{ env.WORK_DIR }}

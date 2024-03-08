@@ -7,7 +7,7 @@ variable "resource_group_name" {
 variable "storage_account_name" {
     description = "Azure Storage Account name"
     type        = string
-    default     = "ghatestactionstringstorage"
+    default     = "ghatestactionstrstorage"
 }
 
 variable "storage_tier" {

@@ -64,7 +64,7 @@ jobs:
       working-directory: ${{ env.WORK_DIR }} 
 
     - name: Terraform Apply
-      if: ${{ github.event.inputs.deploy_infra == true }}
+      if: ${{ github.event.inputs.deploy_infra == 'true' }}
       run: |
         export ARM_CLIENT_ID=${{ secrets.AZURE_CLIENT_ID }}
         export ARM_CLIENT_SECRET=${{ secrets.AZURE_CLIENT_SECRET }}
@@ -75,7 +75,7 @@ jobs:
       working-directory: ${{ env.WORK_DIR }} 
 
     - name: Terraform Destroy
-      if: ${{ github.event.inputs.destroy_infra == true }}
+      if: ${{ github.event.inputs.destroy_infra == 'true' }}
       run: |
         export ARM_CLIENT_ID=${{ secrets.AZURE_CLIENT_ID }}
         export ARM_CLIENT_SECRET=${{ secrets.AZURE_CLIENT_SECRET }}
@@ -84,3 +84,8 @@ jobs:
         
         terraform destroy -auto-approve
       working-directory: ${{ env.WORK_DIR }}
+
+    - name: Debug deploy_infra
+      run: |
+        echo "deploy_infra value: ${{ github.event.inputs.deploy_infra }}"
+        echo "destroy_infra value: ${{ github.event.inputs.destroy_infra }}"

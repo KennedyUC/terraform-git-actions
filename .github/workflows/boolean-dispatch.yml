@@ -27,7 +27,7 @@ jobs:
     name: 'Terraform'
     runs-on: ubuntu-latest
     env:
-      WORK_DIR: './terraform-scripts'
+      WORK_DIR: './terraform-boolean-dispatch'
       TERRAFORM_VERSION: 1.7.3
 
     steps:

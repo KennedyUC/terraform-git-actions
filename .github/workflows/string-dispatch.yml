@@ -11,11 +11,10 @@ on:
   workflow_dispatch:
     inputs:
       action_type:
-        description: 'Deploy or Destroy Infrastructure'
+        description: 'Deploy or Destroy Infrastructure [Enter either "deploy" or "destroy"]'
         required: true
         type: string
         default: 'deploy'
-        choices: ['deploy', 'destroy']
 
 jobs:
   terraform:

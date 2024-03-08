@@ -4,6 +4,9 @@ on:
   push:
     branches:
     - main
+    paths:
+    - .github/workflows/string-dispatch.yml
+    - terraform-string-dispatch/**
 
   workflow_dispatch:
     inputs:
@@ -12,10 +15,6 @@ on:
         required: true
         type: string
         default: 'deploy'
-          
-    paths:
-    - .github/workflows/string-dispatch.yml
-    - terraform-string-dispatch/**
 
 jobs:
   terraform:

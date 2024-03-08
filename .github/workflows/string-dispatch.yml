@@ -11,7 +11,7 @@ on:
   workflow_dispatch:
     inputs:
       action_type:
-        description: 'Deploy or Destroy Infrastructure [Enter either "deploy" or "destroy"]'
+        description: '[deploy or destroy] Infrastructure'
         required: true
         type: string
         default: 'deploy'

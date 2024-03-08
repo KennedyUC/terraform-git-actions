@@ -1,8 +1,8 @@
 terraform {
   backend "azurerm" {
-    resource_group_name     = azurerm_resource_group.rg.name
-    storage_account_name    = azurerm_storage_account.storage.name
-    container_name          = azurerm_storage_container.container.name
+    resource_group_name     = "gha-test-grp"
+    storage_account_name    = "ghateststoragetf"
+    container_name          = "gha-tf-state"
     key                     = "terraform.tfstate"
   }
 }

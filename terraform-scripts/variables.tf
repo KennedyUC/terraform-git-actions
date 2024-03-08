@@ -1,13 +1,7 @@
 variable "resource_group_name" {
     description = "Azure Resource Group name"
     type        = string
-    default     = "gha-action-grp"
-}
-
-variable "resource_group_location" {
-    description = "Azure Resource Group location"
-    type        = string
-    default     = "eastus"
+    default     = "gha-test-grp"
 }
 
 variable "storage_account_name" {

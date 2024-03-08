@@ -5,18 +5,18 @@ on:
     branches:
     - main
 
-    workflow_dispatch:
-      inputs:
-        deploy_infra:
-          description: 'Deploy Infrastructure'
-          required: true
-          type: boolean
-          default: true
-        # destroy_infra:
-        #   description: 'Destroy Infrastructure'
-        #   required: true
-        #   type: boolean
-        #   default: false
+  workflow_dispatch:
+    inputs:
+      deploy_infra:
+        description: 'Deploy Infrastructure'
+        required: true
+        type: boolean
+        default: true
+      # destroy_infra:
+      #   description: 'Destroy Infrastructure'
+      #   required: true
+      #   type: boolean
+      #   default: false
           
     paths:
     - .github/workflows/infra-deploy.yml
